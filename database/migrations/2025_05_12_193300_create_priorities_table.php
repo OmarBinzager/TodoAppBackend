@@ -12,11 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('priorities', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
             $table->string('name');
             $table->string('color')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

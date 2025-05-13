@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('picture')->nullable();
-            $table->foreignId('category')->constrained('categories')->onDelete('cascade');
-            $table->foreignId('priority')->constrained('priorities')->onDelete('cascade');
-            $table->foreignId('status')->constrained('statuses')->onDelete('cascade');
+            $table->foreignId('category')->constrained('categories')->onDelete("no action");
+            $table->foreignId('priority')->constrained('priorities')->onDelete('no action');
+            $table->foreignId('status')->constrained('statuses')->onDelete('no action');
             $table->date('due_date')->nullable();
-            $table->timestamps();
-            $table->timestamp('completed_at')->nullable();
+            $table->dateTime('completed_at')->nullable();
+            $table->dateTime('created_at')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
         });
     }

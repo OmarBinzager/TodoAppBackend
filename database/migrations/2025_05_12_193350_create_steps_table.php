@@ -12,11 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('steps', function (Blueprint $table) {
-            $table->id();
+            $table->id()->autoIncrement();
             $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
             $table->integer('step_index');
             $table->string('step');
-            $table->timestamps();
         });
     }
 
