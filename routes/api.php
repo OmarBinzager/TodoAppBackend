@@ -18,28 +18,30 @@ Route::controller(TaskController::class)->group(function () {
     Route::get('/task/get-all', 'getAll');
     Route::get('/task/get-id', 'getId');
     Route::get('/task/add', 'add');
-    Route::get('/task/delete/{id}', 'delete');
-    Route::get('/task/get-steps', 'getSteps');
-    Route::get('/task/add-step', 'addStep');
-    Route::get('/task/add-steps', 'addSteps');
-    Route::get('/task/update-step', 'updateStep');
-    Route::get('/task/delete-step', 'deleteStep');
+    Route::get('/task/{id}/edit', 'update');
+    Route::get('/task/{id}/delete', 'delete');
+    Route::get('/task/{id}/get-steps', 'getSteps');
+    Route::get('/task/{id}/add-step', 'addStep');
+    Route::post('/task/{id}/add-steps', 'addSteps');
+    Route::get('/task/{id}/update-steps', 'updateSteps');
+    Route::get('/task/{id}/delete-step/{stepId}', 'deleteStep');
+    Route::get('/task/{id}/delete-steps', 'deleteSteps');
 });
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/category/get-all', 'getAll');
     Route::get('/category/add', 'add');
-    Route::get('/category/edit', 'update');
+    Route::get('/category/{id}/edit', 'update');
     Route::get('/category/get-id', 'getId');
-    Route::get('/category/delete/{id}', 'delete');
+    Route::get('/category/{id}/delete', 'delete');
 });
 
 Route::controller(PriorityController::class)->group(function () {
     Route::get('/priority/get-all', 'getAll');
     Route::get('/priority/add', 'add');
-    Route::get('/priority/edit', 'update');
+    Route::get('/priority/{id}/edit', 'update');
     Route::get('/priority/get-id', 'getId');
-    Route::get('/priority/delete/{id}', 'delete');
+    Route::get('/priority/{id}/delete', 'delete');
 });
 
 Route::controller(StatusController::class)->group(function () {
