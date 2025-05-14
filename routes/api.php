@@ -23,7 +23,7 @@ Route::controller(TaskController::class)->group(function () {
     Route::get('/task/{id}/get-steps', 'getSteps');
     Route::get('/task/{id}/add-step', 'addStep');
     Route::post('/task/{id}/add-steps', 'addSteps');
-    Route::get('/task/{id}/update-steps', 'updateSteps');
+    Route::get('/task/{id}/edit-steps', 'updateSteps');
     Route::get('/task/{id}/delete-step/{stepId}', 'deleteStep');
     Route::get('/task/{id}/delete-steps', 'deleteSteps');
 });

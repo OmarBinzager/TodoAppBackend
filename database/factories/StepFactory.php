@@ -19,7 +19,7 @@ class StepFactory extends Factory
         return [
             'step' => fake()->realText(),
             'step_index' => fake()->numberBetween(1, 5),
-            'task_id' => fake()-> numberBetween(1,40)
+            'task_id' => fake()-> numberBetween(6, 12)
         ];
     }
 }

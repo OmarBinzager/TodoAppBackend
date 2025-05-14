@@ -20,7 +20,11 @@ class TaskController extends Controller
     }
 
     public function getAll() {
-        return response()->json(Task::all());
+        return response()->json(Task::join('priorities', 'tasks.priority', '=', 'priorities.id')
+        ->join('categories', 'tasks.category', '=', 'categories.id')
+        ->join('statuses', 'tasks.status', '=', 'statuses.id')
+        ->select('tasks.*', 'priorities.name as priority_name', 'priorities.color as priority_color', 'categories.name as category_name', 'statuses.name as status_name', 'statuses.color as status_color')
+        ->get());
     }
 
     public function getId(Request $request) {
