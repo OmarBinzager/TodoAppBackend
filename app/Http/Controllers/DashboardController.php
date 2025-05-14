@@ -16,17 +16,11 @@ class DashboardController extends Controller
      */
     public function getStats(): JsonResponse
     {
-        $notStartedTasks = Task::whereHas('status', function($query) {
-            $query->where('name', 'Not Started');
-        })->count();
+        $notStartedTasks = Task::where('status', 1)->count();
 
-        $inProgressTasks = Task::whereHas('status', function($query) {
-            $query->where('name', 'In Progress');
-        })->count();
+        $inProgressTasks = Task::where('status', 2)->count();
 
-        $completedTasks = Task::whereHas('status', function($query) {
-            $query->where('name', 'Completed');
-        })->count();
+        $completedTasks = Task::where('status', 3)->count();
 
         $totalTasks = $notStartedTasks + $inProgressTasks + $completedTasks;
 
@@ -54,11 +48,11 @@ class DashboardController extends Controller
     {
         $recentTasks = Task::with(['category', 'priority', 'status'])
             ->latest()
-            ->take(5)
+            ->take(10)
             ->get()
             ->map(function($task) {
                 $steps = Step::where('task_id', $task->id)
-                    ->orderBy('order', 'asc')
+                    ->orderBy('step_index', 'asc')
                     ->get()
                     ->map(function($step) {
                         return [
@@ -80,7 +74,6 @@ class DashboardController extends Controller
                     'steps' => $steps
                 ];
             });
-
         return response()->json($recentTasks);
     }
 
@@ -90,14 +83,13 @@ class DashboardController extends Controller
     public function getCompletedTasks(): JsonResponse
     {
         $completedTasks = Task::with(['category', 'priority', 'status'])
-            ->whereHas('status', function($query) {
-                $query->where('name', 'Completed');
-            })
+            ->where('status', 3)
             ->latest()
+            ->take(5)
             ->get()
             ->map(function($task) {
                 $steps = Step::where('task_id', $task->id)
-                    ->orderBy('order', 'asc')
+                    ->orderBy('step_index', 'asc')
                     ->get()
                     ->map(function($step) {
                         return [

@@ -6,5 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Status extends Model
 {
-    //
+
+    public $timestamps = false;
+    //l
+    protected $fillable = [
+        'name',
+        'color',
+    ];
 }

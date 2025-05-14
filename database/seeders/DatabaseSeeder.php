@@ -15,10 +15,12 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // User::factory()->create([
+        //     'first_name' => 'Test User',
+        //     'last_name' => 'Test User',
+        //     'avatar' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
 
         $this->call([
             StatusSeeder::class,

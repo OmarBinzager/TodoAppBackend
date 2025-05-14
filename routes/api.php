@@ -15,24 +15,44 @@ Route::get('/user', function (Request $request) {
 
 
 Route::controller(TaskController::class)->group(function () {
-    Route::get('/tasks/get-all', 'getAll');
+    Route::get('/task/get-all', 'getAll');
+    Route::get('/task/get-id', 'getId');
+    Route::get('/task/add', 'add');
+    Route::get('/task/delete/{id}', 'delete');
+    Route::get('/task/get-steps', 'getSteps');
+    Route::get('/task/add-step', 'addStep');
+    Route::get('/task/add-steps', 'addSteps');
+    Route::get('/task/update-step', 'updateStep');
+    Route::get('/task/delete-step', 'deleteStep');
 });
 
 Route::controller(CategoryController::class)->group(function () {
     Route::get('/category/get-all', 'getAll');
+    Route::get('/category/add', 'add');
+    Route::get('/category/edit', 'update');
+    Route::get('/category/get-id', 'getId');
+    Route::get('/category/delete/{id}', 'delete');
 });
 
 Route::controller(PriorityController::class)->group(function () {
     Route::get('/priority/get-all', 'getAll');
+    Route::get('/priority/add', 'add');
+    Route::get('/priority/edit', 'update');
+    Route::get('/priority/get-id', 'getId');
+    Route::get('/priority/delete/{id}', 'delete');
 });
 
 Route::controller(StatusController::class)->group(function () {
     Route::get('/status/get-all', 'getAll');
+    // Route::get('/status/add', 'add');
 });
 
-Route::controller(StepController::class)->group(function () {
-    Route::get('/step/get-all', 'getAll');
-});
+// Route::controller(StepController::class)->group(callback: function () {
+//     Route::get('/step/{id}/get-all', 'getTaskSteps');
+//     Route::get('/step/{id}/delete', 'deleteTaskSteps');
+//     Route::get('/step/{id}/add-all', 'addTaskSteps');
+//     Route::get('/step/{id}/add', 'add');
+// });
 
 Route::controller(DashboardController::class)->group(function () {
     Route::get('/dashboard/stats', 'getStats');
