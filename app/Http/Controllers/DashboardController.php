@@ -8,6 +8,8 @@ use App\Models\Priority;
 use App\Models\Status;
 use App\Models\Step;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -16,27 +18,21 @@ class DashboardController extends Controller
      */
     public function getStats(): JsonResponse
     {
-        $notStartedTasks = Task::where('status', 1)->count();
+        $notStartedTasks = Task::where('status', 1)->where('user_id', Auth::user()->id)->count();
 
-        $inProgressTasks = Task::where('status', 2)->count();
+        $inProgressTasks = Task::where('status', 2)->where('user_id', Auth::user()->id)->count();
 
-        $completedTasks = Task::where('status', 3)->count();
+        $completedTasks = Task::where('status', 3)->where('user_id', Auth::user()->id)->count();
 
         $totalTasks = $notStartedTasks + $inProgressTasks + $completedTasks;
 
         return response()->json([
-            'not_started' => [
-                'count' => $notStartedTasks,
-                'percentage' => $totalTasks > 0 ? round(($notStartedTasks / $totalTasks) * 100, 2) : 0
-            ],
-            'in_progress' => [
-                'count' => $inProgressTasks,
-                'percentage' => $totalTasks > 0 ? round(($inProgressTasks / $totalTasks) * 100, 2) : 0
-            ],
-            'completed' => [
-                'count' => $completedTasks,
-                'percentage' => $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100, 2) : 0
-            ],
+            'not_started' => $totalTasks > 0 ? round(($notStartedTasks / $totalTasks) * 100, 2) : 0
+            ,
+            'in_progress' => $totalTasks > 0 ? round(($inProgressTasks / $totalTasks) * 100, 2) : 0
+            ,
+            'completed' =>  $totalTasks > 0 ? round(($completedTasks / $totalTasks) * 100, 2) : 0
+            ,
             'total_tasks' => $totalTasks
         ]);
     }
@@ -46,71 +42,35 @@ class DashboardController extends Controller
      */
     public function getRecentTasks(): JsonResponse
     {
-        $recentTasks = Task::with(['category', 'priority', 'status'])
+        // return response()->json(Auth::user()->id);
+        $recentTasks = Task::leftJoin('priorities', 'tasks.priority', '=', 'priorities.id')
+            ->leftJoin('categories', 'tasks.category', '=', 'categories.id')
+            ->leftJoin('statuses', 'tasks.status', '=', 'statuses.id')
+            ->select('tasks.*', 'priorities.name as priority_name', 'priorities.color as priority_color', 'categories.name as category_name', 'statuses.name as status_name', 'statuses.color as status_color')
+            ->where('tasks.user_id', Auth::user()->id)
+            ->whereNot('status', 3) // Exclude completed tasks
             ->latest()
             ->take(10)
-            ->get()
-            ->map(function($task) {
-                $steps = Step::where('task_id', $task->id)
-                    ->orderBy('step_index', 'asc')
-                    ->get()
-                    ->map(function($step) {
-                        return [
-                            'id' => $step->id,
-                            'step' => $step->step,
-                            'step_index' => $step->step_index,
-                        ];
-                    });
-
-                return [
-                    'id' => $task->id,
-                    'title' => $task->title,
-                    'description' => $task->description,
-                    'picture' => $task->picture,
-                    'due_date' => $task->due_date,
-                    'category' => $task->category,
-                    'priority' => $task->priority,
-                    'status' => $task->status,
-                    'steps' => $steps
-                ];
-            });
+            ->orderByDesc('completed_at')
+            ->get();
         return response()->json($recentTasks);
     }
 
     /**
      * Get completed tasks with their steps
      */
-    public function getCompletedTasks(): JsonResponse
+    public function getCompletedTasks()
     {
-        $completedTasks = Task::with(['category', 'priority', 'status'])
-            ->where('status', 3)
+        $completedTasks = Task::leftJoin('priorities', 'tasks.priority', '=', 'priorities.id')
+            ->leftJoin('categories', 'tasks.category', '=', 'categories.id')
+            ->leftJoin('statuses', 'tasks.status', '=', 'statuses.id')
+            ->select('tasks.*', 'priorities.name as priority_name', 'priorities.color as priority_color', 'categories.name as category_name', 'statuses.name as status_name', 'statuses.color as status_color')
+            ->where('tasks.user_id', Auth::user()->id)
+            ->where('status', 3,)
             ->latest()
             ->take(5)
-            ->get()
-            ->map(function($task) {
-                $steps = Step::where('task_id', $task->id)
-                    ->orderBy('step_index', 'asc')
-                    ->get()
-                    ->map(function($step) {
-                        return [
-                            'id' => $step->id,
-                            'step' => $step->step,
-                            'step_index' => $step->step_index,
-                        ];
-                    });
-
-                return [
-                    'id' => $task->id,
-                    'title' => $task->title,
-                    'description' => $task->description,
-                    'picture' => $task->picture,
-                    'due_date' => $task->due_date,
-                    'category' => $task->category,
-                    'priority' => $task->priority,
-                    'status' => $task->status,
-                    'steps' => $steps
-                ];
-            });
+            ->orderByDesc('created_at')
+            ->get();
 
         return response()->json($completedTasks);
     }

@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('picture')->nullable();
-            $table->foreignId('category')->nullable()->constrained('categories')->onDelete("no action");
-            $table->foreignId('priority')->nullable()->constrained('priorities')->onDelete('no action');
+            $table->foreignId('category')->nullable()->constrained('categories')->onDelete("set null");
+            $table->foreignId('priority')->nullable()->constrained('priorities')->onDelete('set null');
             $table->foreignId('status')->constrained('statuses')->onDelete('no action');
             $table->date('due_date')->nullable();
             $table->dateTime('completed_at')->nullable();
