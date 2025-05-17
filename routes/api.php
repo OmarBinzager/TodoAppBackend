@@ -18,6 +18,8 @@ Route::controller(UserController::class)->group(function() {
     Route::post('/auth/register', 'register');
     Route::post('/auth/login', 'login');
     Route::post('/auth/logout', 'logout')->middleware('auth:sanctum');
+    Route::post('/auth/edit', 'edit')->middleware('auth:sanctum');
+    Route::post('/auth/reset-password', 'resetPassword')->middleware('auth:sanctum');
 });
 
 Route::controller(TaskController::class)->group(function () {
