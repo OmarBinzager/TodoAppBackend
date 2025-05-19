@@ -70,3 +70,9 @@ Route::controller(DashboardController::class)->group(function () {
     Route::get('/dashboard/recent-tasks', 'getRecentTasks')->middleware('auth:sanctum');
     Route::get('/dashboard/completed-tasks', 'getCompletedTasks')->middleware('auth:sanctum');
 });
+
+
+
+Route::get('health', function (){
+    return response("API is working");
+} );

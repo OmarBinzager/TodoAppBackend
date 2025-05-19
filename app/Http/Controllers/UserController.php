@@ -69,7 +69,7 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'required|string|email|max:255,',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:4096'
         ]);
 
         $user->first_name = $request->first_name;
